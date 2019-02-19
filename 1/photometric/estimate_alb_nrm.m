@@ -35,14 +35,18 @@ for h_ = 1:h
     for w_ = 1:w
         i = reshape(image_stack(h_, w_, :), 1, []);
         I = diag(i);
+        
+        %disp(size(scriptV))
+        %disp(size(transpose(i)))
+        
         if shadow_trick == false
-            g = mldivide(scriptV, i);
+            g = mldivide(scriptV, transpose(i));
+        end
+        
+        if shadow_trick == true
+            g = mldivide(I*scriptV, I*transpose(i));
         end
 
-        if shadow_trick == true
-            
-            g = linsolve(I*scriptV, I*transpose(i));
-        end
 
         albedo(h_, w_, :) =  norm(g,2);
         normal(h_, w_, :) = g / norm(g,2);
