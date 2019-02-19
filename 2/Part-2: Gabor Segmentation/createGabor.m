@@ -61,6 +61,14 @@ sinCarrier = createSin(rot_x, lambda, psi);
 myGabor_real =      % \\TODO: modulate gaussianEnv with cosCarrier
 myGabor_imaginary = % \\TODO: modulate gaussianEnv with sinCarrier
 
+r = 30;
+[x,y] = meshgrid(-r:r, -r:r);
+xdash = x*cos(theta) + y*sin(theta);
+ydash = -x*sin(theta) + y*cos(theta);
+gauss = exp(- 0.5 * (xdash.^2 + gamma^2*ydash.^2) / sigma^2);
+Greal = gauss * cos(2*pi*xdash/lambda + psi);
+Gim   = gauss * sin(2*pi*xdash/lambda + psi);
+
 % Pack myGabor_real and myGabor_imaginary into myGabor.
 myGabor(:,:,1) = myGabor_real;
 myGabor(:,:,2) = myGabor_imaginary;
