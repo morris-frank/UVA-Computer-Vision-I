@@ -1,7 +1,7 @@
 %% Hyperparameters
 k        = 2;      % number of clusters in k-means algorithm. By default, 
                    % we consider k to be 2 in foreground-background segmentation task.
-image_id = 'Robin-1'; % Identifier to switch between input images.
+image_id = 'Cows'; % Identifier to switch between input images.
                    % Possible ids: 'Kobi',    'Polar', 'Robin-1'
                    %               'Robin-2', 'Cows'
 
@@ -71,8 +71,8 @@ dTheta      = 2*pi/8;                  % \\ the step size
 orientations = 0:dTheta:(pi/2);       
 
 % Define the set of sigmas for the Gaussian envelope. Sigma here defines 
-% the standard deviation, or the spread of the Gaussian. 
-sigmas = [1,2]; 
+% the stanard deviation, or the spread of the Gaussian. 
+sigmas = [1,10]; 
 
 % Now you can create the filterbank. We provide you with a MATLAB struct
 % called gaborFilterBank in which we will hold the filters and their
@@ -251,6 +251,8 @@ Aseg1(BW) = img(BW);
 Aseg2(~BW) = img(~BW);
 figure(6)
 imshowpair(Aseg1,Aseg2,'montage')
+%imwrite(Aseg1, strcat(image_id, '_1.jpg'))
+%imwrite(Aseg2, strcat(image_id, '_2.jpg'))
 
 
 

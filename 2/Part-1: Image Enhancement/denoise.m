@@ -6,7 +6,7 @@ switch kernel_type
     case 'median'
         imOut = medfilt2(image, [varargin{1}, varargin{1}]);
     case 'gaussian'
-        G = gauss2D(varargin);
+        G = gauss2D(varargin{1}, varargin{2});
         imOut = imfilter(image, G, 'conv');
 end
 end
