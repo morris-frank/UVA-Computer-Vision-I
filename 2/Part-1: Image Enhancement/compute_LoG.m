@@ -7,7 +7,7 @@ switch LOG_type
         K2 = fspecial('laplacian');
         imOut = imfilter(imfilter(image, K1), K2);
     case 2
-        %method 2
+        %method 2 
         K = fspecial('log', 5, 0.5);
         imOut = imfilter(image, K);
     case 3

@@ -1,7 +1,7 @@
 %% Hyperparameters
 k        = 2;      % number of clusters in k-means algorithm. By default, 
                    % we consider k to be 2 in foreground-background segmentation task.
-image_id = 'Cows'; % Identifier to switch between input images.
+image_id = 'Robin-2'; % Identifier to switch between input images.
                    % Possible ids: 'Kobi',    'Polar', 'Robin-1'
                    %               'Robin-2', 'Cows'
 
@@ -10,7 +10,7 @@ err_msg  = 'Image not available.';
 
 % Control settings
 visFlag       = false;    %  Set to true to visualize filter responses.
-smoothingFlag = true;   %  Set to true to postprocess filter outputs.
+smoothingFlag = false;   %  Set to true to postprocess filter outputs.
 
 %% Read image
 switch image_id
@@ -65,6 +65,7 @@ lambdaMax = hypot(numRows,numCols);
 % (or the central frequency of the carrier signal, which is 1/lambda)
 n = floor(log2(lambdaMax/lambdaMin));
 lambdas = 2.^(0:(n-2)) * lambdaMin;
+lambdas = lambdas(2:3);
 
 % Define the set of orientations for the Gaussian envelope.
 dTheta      = 2*pi/8;                  % \\ the step size
@@ -72,7 +73,10 @@ orientations = 0:dTheta:(pi/2);
 
 % Define the set of sigmas for the Gaussian envelope. Sigma here defines 
 % the stanard deviation, or the spread of the Gaussian. 
-sigmas = [1,10]; 
+sigmas = [1,2]; 
+%sigmas = [5,7];
+
+sigma_g = 10;
 
 % Now you can create the filterbank. We provide you with a MATLAB struct
 % called gaborFilterBank in which we will hold the filters and their
@@ -139,8 +143,8 @@ fprintf('--------------------------------------\n')
 %            explain what works better and why shortly in the report.
 featureMaps = cell(length(gaborFilterBank),1);
 for jj = 1 : length(gaborFilterBank)
-    real_out =  imfilter(img_gray, gaborFilterBank(jj).filterPairs(:,:,1), 'symmetric', 'same', 'conv');
-    imag_out =  imfilter(img_gray, gaborFilterBank(jj).filterPairs(:,:,2), 'symmetric', 'same', 'conv');
+    real_out =  imfilter(img_gray, gaborFilterBank(jj).filterPairs(:,:,1), 'replicate', 'same', 'conv');
+    imag_out =  imfilter(img_gray, gaborFilterBank(jj).filterPairs(:,:,2), 'replicate', 'same', 'conv');
     featureMaps{jj} = cat(3, real_out, imag_out);
     
     % Visualize the filter responses if you wish.
@@ -186,7 +190,7 @@ end
 features = zeros(numRows, numCols, length(featureMags));
 if smoothingFlag
     for jj = 1:length(featureMags)
-        features(:,:,jj) = imgaussfilt(featureMags{jj}, 2);
+        features(:,:,jj) = imgaussfilt(featureMags{jj}, sigma_g);
     end
 else
     for jj = 1:length(featureMags)
@@ -251,8 +255,8 @@ Aseg1(BW) = img(BW);
 Aseg2(~BW) = img(~BW);
 figure(6)
 imshowpair(Aseg1,Aseg2,'montage')
-%imwrite(Aseg1, strcat(image_id, '_1.jpg'))
-%imwrite(Aseg2, strcat(image_id, '_2.jpg'))
+imwrite(Aseg1, strcat(image_id, '_best_unsmooth_1.jpg'))
+imwrite(Aseg2, strcat(image_id, '_best_unsmooth__2.jpg'))
 
 
 
