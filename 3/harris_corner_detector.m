@@ -9,8 +9,8 @@ function [H, r, c] = harris_corner_detector(im, thresh)
     
     G = fspecial('gauss');
     [Gx, Gy] = gradient(G);
-    Gx = [-1 0 1; -1 0 1; -1 0 1];
-    Gy = Gx';
+    %Gx = [-1 0 1; -1 0 1; -1 0 1];
+    %Gy = Gx';
 
     
     Ix = imfilter(im_gray, Gx, 'conv', 'symmetric');
@@ -36,7 +36,9 @@ function [H, r, c] = harris_corner_detector(im, thresh)
     
     figure(2);
     imshow(mat2gray(Ix));
+    imwrite(mat2gray(Ix), 'harris_ix.png');
     
     figure(3);
     imshow(mat2gray(Iy));
+    imwrite(mat2gray(Iy), 'harris_iy.png');
 end
