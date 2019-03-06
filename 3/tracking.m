@@ -7,11 +7,11 @@ for k = 1:numel(S)
     F = fullfile(folder,S(k).name);
     I = imread(F);
     
-    H = harris_corner_detector(I);
+    H = harris_corner_detector(I, 0.01);
     
     
     if i == 1
-        [Vx, Vy] = lucas_kanade(I, I2, H);
+        [Vx, Vy] = lucas_kanade_for_tracking(I, I2, H);
         
     elseif i == 0
         imshow(H)
