@@ -16,7 +16,7 @@ function [Vx,Vy] = lucas_kanade(im1, im2, plotting)
     
     assert(all(size(im1) == size(im2)))
     
-    stride = 10;
+    stride = 5;
     ws = 15;
     hws = floor(ws/2);
     [w,h] = size(im1);
