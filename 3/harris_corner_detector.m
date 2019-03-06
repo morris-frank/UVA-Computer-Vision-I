@@ -1,5 +1,9 @@
-function [H, r, c] = harris_corner_detector(im, thresh)
-    n = 3;
+function [H, r, c] = harris_corner_detector(im, thresh, plotting)
+    n = 2;
+    
+    if nargin < 3
+        plotting = true;
+    end
     
     im_gray = im;
     if size(im, 3) == 3
@@ -7,14 +11,14 @@ function [H, r, c] = harris_corner_detector(im, thresh)
     end
     im_gray = im2double(im_gray);
     
-    G = fspecial('gauss');
+    G = fspecial('gauss', 5, 2);
     [Gx, Gy] = gradient(G);
     %Gx = [-1 0 1; -1 0 1; -1 0 1];
     %Gy = Gx';
 
+    Ix = (imfilter(im_gray, Gx, 'conv', 'symmetric'));
+    Iy = (imfilter(im_gray, Gy, 'conv', 'symmetric'));
     
-    Ix = imfilter(im_gray, Gx, 'conv', 'symmetric');
-    Iy = imfilter(im_gray, Gy, 'conv', 'symmetric');
     
     A = imfilter(Ix.^2, G, 'conv', 'symmetric');
     B = imfilter(Ix.*Iy, G, 'conv', 'symmetric');
@@ -26,19 +30,25 @@ function [H, r, c] = harris_corner_detector(im, thresh)
     
     [r, c] = find(H);
     
-    figure(1);
-    imshow(im)
-    hold on;
-    for i = 1:size(r)
-        plot(c(i), r(i), 'r+', 'MarkerSize', 20);
+    if plotting
+        figure(1);
+        set(gca,'Units','pixels'); %changes the Units property of axes to pixels
+        set(gca,'Position', [1 1 size(im,1) size(im,2)])
+        imshow(im)
+        hold on;
+        for i = 1:size(r)
+            plot(c(i), r(i), 'r+', 'MarkerSize', 5);
+        end
+        hold off;
+    
+        figure(2);
+        Ix = mat2gray(Ix);
+        imshow(Ix);
+        imwrite(Ix, 'harris_ix.png');
+    
+        figure(3);
+        Iy = mat2gray(Iy);
+        imshow(Iy);
+        imwrite(Iy, 'harris_iy.png');
     end
-    hold off;
-    
-    figure(2);
-    imshow(mat2gray(Ix));
-    imwrite(mat2gray(Ix), 'harris_ix.png');
-    
-    figure(3);
-    imshow(mat2gray(Iy));
-    imwrite(mat2gray(Iy), 'harris_iy.png');
 end

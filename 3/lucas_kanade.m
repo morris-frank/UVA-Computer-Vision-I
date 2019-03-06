@@ -1,4 +1,4 @@
-function [Vx,Vy] = lucas_kanade(im1, im2)
+function [Vx,Vy] = lucas_kanade(im1, im2, plotting)
     oim1 = im1;
     oim2 = im2;
     if (size(im1,3) == 3)
@@ -6,6 +6,9 @@ function [Vx,Vy] = lucas_kanade(im1, im2)
     end
     if (size(im2,3) == 3)
         im2 = rgb2gray(im2);
+    end
+    if nargin < 3
+        plotting = true;
     end
 
     im1 = im2double(im1);
@@ -41,16 +44,18 @@ function [Vx,Vy] = lucas_kanade(im1, im2)
             b = -cIt(:);
             %u = pinv(A) * b;
             u = pinv(A'*A)*A'*b;
-            Vx(x,y) = u(1);
-            Vy(x,y) = u(2);
+            Vx(x:x+stride,y:y+stride) = u(1);
+            Vy(x:x+stride,y:y+stride) = u(2);
         end
     end
     
-    figure(1)
-    imshow(oim1)
-    hold on;
-    quiver(Vx, Vy, 10);
-    hold off;
-    figure(2)
-    imshow(oim2)
+    if plotting
+        figure(1)
+        set(gca,'Units','pixels'); %changes the Units property of axes to pixels
+        set(gca,'Position', [1 1 size(oim1,1) size(oim1,2)])
+        imshow(oim1)
+        hold on;
+        quiver(Vx, Vy, 10);
+        hold off;
+    end
 end
