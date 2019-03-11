@@ -2,6 +2,7 @@ function [matches, scores, fa, fb] = keypoint_matching(image1, image2)
 
 I1 = single(imread(image1));
 I2 = single(imread(image2));
+%size(I1)
 
 [fa, da] = vl_sift(I1) ;
 [fb, db] = vl_sift(I2) ;

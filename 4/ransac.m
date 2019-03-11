@@ -33,7 +33,7 @@ for i=1:N
     inliers = 0;
     
     for j=1:T_size(2)
-        transform_fa = M*fa(1:2,matches(1, j))+t;
+        transform_fa = M*fa(1:2,matches(1, j))+t';
         err = norm(transform_fa - fb(1:2,matches(2, j)));
         %err
         if err<11
