@@ -9,10 +9,11 @@ plot_rand_matches(F1, F2, matches, boat1, boat2)
 
 % Our own interpolation method
 transformed_image = apply_tform(boat1, tform, 1);
-figure(2)
-imshow(transformed_image)
-
 % Transformation and interpolation using imwarp
 warped_image = apply_tform(boat1, tform, 2);
-figure(3)
+
+figure(2)
+subplot(1,2,1)
+imshow(transformed_image)
+subplot(1,2,2)
 imshow(warped_image)

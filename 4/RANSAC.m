@@ -1,6 +1,10 @@
-function [best_transformation] = RANSAC(F1, F2, matches)
-    N = 100;
-    P = 10;
+function [best_transformation] = RANSAC(F1, F2, matches, N, P)
+    if nargin < 5
+        P = 10;
+    end
+    if nargin < 4
+        N = 15;
+    end
     
     M = size(matches, 2);
     sF1 = transpose(F1(1:2, matches(1, :)));
@@ -18,7 +22,7 @@ function [best_transformation] = RANSAC(F1, F2, matches)
     
     best_inliers = 0;
     best_transformation = [];
- 
+    ninty_steps = N;
     for n = 1:N
         perm = randperm(M);
         sel = perm(1:P);
@@ -29,9 +33,15 @@ function [best_transformation] = RANSAC(F1, F2, matches)
         tF2 = reshape(A * x, [M, 2]);
         D = sqrt(sum((sF2 - tF2).^2, 2));
         inliers = sum(D < 10);
+        
         if inliers > best_inliers
+            if best_inliers < 0.9 * M && inliers > 0.9 * M
+                ninty_steps = n;
+            end
+            
             best_inliers = inliers;
             best_transformation = x;
         end
     end
+    disp(sprintf('Max inliers: %d, steps to 90pc: %d%n', best_inliers, ninty_steps))
 end

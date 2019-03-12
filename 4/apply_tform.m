@@ -10,7 +10,7 @@ function [transformed_image] = apply_tform(image, tform, method)
             for j = 1:w
                 nx = round((rot * [i; j]) - trans);
                 if all(nx > 0) && nx(1)<h && nx(2)<w
-                    transformed_image(i,j) = boat1(nx(1), nx(2));
+                    transformed_image(i,j) = image(nx(1), nx(2));
                 end
             end
         end
