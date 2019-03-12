@@ -14,6 +14,7 @@ function stitch(left, right)
     trans_corners = rot * corners + trans;
     ss = ceil(abs(min(trans_corners')) + [hr,wr]);
     
+    % Make the stitched image
     stitched = zeros(ss(1), ss(2), 3);
     stitched(1:hw, 1:ww, :) = warped_image;
     stitched(1-trans(1):hr-trans(1), ss(2)-wr+1:end, :) = right;
