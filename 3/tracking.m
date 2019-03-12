@@ -1,5 +1,5 @@
 function tracking(directory)
-    files = dir('./person_toy/*jpg');
+    files = dir('./pingpong/*jpeg');
     
     
     left_image = imread(strcat(files(1).folder, '/', files(1).name));
