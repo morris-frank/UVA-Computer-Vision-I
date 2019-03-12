@@ -14,6 +14,7 @@ function AWB()
         imshow(corrected)
         title('Color corrected')
     end
-    color_correction('./awb.jpg')
+    %color_correction('./awb.jpg')
     %color_correction('./ceiling.jpg')
+    color_correction('~/tmp/4.jpg')
 end

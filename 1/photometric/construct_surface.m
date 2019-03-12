@@ -38,7 +38,7 @@ switch path_type
         % =================================================================
         % YOUR CODE GOES HERE
         for i = 1:w
-            S2 = sum(p(:, 1:i), 1);
+            S2 = sum(p(:, 1:i), 2);
             S_row(:, i) = S2;
         end
         
@@ -52,7 +52,7 @@ switch path_type
         % YOUR CODE GOES HERE
         
         for i = 1:w
-            S2 = sum(p(:, 1:i), 1);
+            S2 = sum(p(:, 1:i), 2);
             S_row(:, i) = S2;
         end
         

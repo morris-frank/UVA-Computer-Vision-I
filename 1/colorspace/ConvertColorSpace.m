@@ -18,14 +18,21 @@ function [new_image] = ConvertColorSpace(input_image, colorspace)
 input_image = im2double(input_image);
 
 if strcmp(colorspace, 'opponent')
+    disp('opponent in progress')
     new_image = rgb2opponent(input_image); % fill in this function
-elseif strcmp(colorspace, 'rgb')  
+elseif strcmp(colorspace, 'rgb')
+    disp('normed rgb in progress')
     new_image = rgb2normedrgb(input_image); % fill in this function
-elseif strcmp(colorspace, 'hsv')   
+elseif strcmp(colorspace, 'hsv') 
+    disp('hsv in progress')
     % use the built-in function
+    new_image = rgb2hsv(input_image);
 elseif strcmp(colorspace, 'ycbcr')
+    disp('ycbcr in progress')
     % use the built-in function
+    new_image = rgb2ycbcr(input_image);
 elseif strcmp(colorspace, 'gray')
+    disp('gray in progress')
     new_image = rgb2grays(input_image); % fill in this function
 else
 % if user inputs an unknow colorspace just notify and do not plot anything
