@@ -1,4 +1,4 @@
-function stitch(left, right)
+function [stitched] = stitch(left, right)
     [F1, F2, matches, ~] = keypoint_matching(rgb2gray(left), rgb2gray(right));
     tform = RANSAC(F1, F2, matches);
     warped_image = apply_tform(left, tform, 2);
@@ -18,7 +18,4 @@ function stitch(left, right)
     stitched = zeros(ss(1), ss(2), 3);
     stitched(1:hw, 1:ww, :) = warped_image;
     stitched(1-trans(1):hr-trans(1), ss(2)-wr+1:end, :) = right;
-    
-    figure(1)
-    imshow(stitched)
 end
