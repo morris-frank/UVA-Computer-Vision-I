@@ -1,9 +1,9 @@
 function [best_transformation] = RANSAC(F1, F2, matches, N, P)
     if nargin < 5
-        P = 8;
+        P = 10;
     end
     if nargin < 4
-        N = 40;
+        N = 100;
     end
     
     M = size(matches, 2);
