@@ -14,11 +14,11 @@ y3(y3 ~= 3) = 0;
 model3 = fitcsvm(X_train, y3');
 
 y4 = y_train;
-y4(y4 ~= 4) = 0;
+y4(y4 ~= 7) = 0;
 model4 = fitcsvm(X_train, y4');
 
 y5 = y_train;
-y5(y5 ~= 5) = 0;
+y5(y5 ~= 9) = 0;
 model5 = fitcsvm(X_train, y5');
 
 end
