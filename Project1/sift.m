@@ -1,32 +1,33 @@
 function [features] = sift(img, type)
     assert(size(img, 3) == 3)
     
-    N = 128;
-    [h,w,~] = size(img);
-    n_features = (h-9) * (w-9);
+    opts = split(type, '_');
+    if opts{2} == "sift"
+        [frames, ~] = vl_sift(rgb2gray(img / 255));
+        n_features = size(frames, 2);
+    else
+        n_features = (size(img,1)-9) * (size(img,2)-9);
+    end
     
-    switch type
-        case 'opponent_sift'
-            features = zeros(N * 3, n_features, 'single');
-
-            % Calculating the opponent image
-            opp_img = zeros(size(img), 'single');
-            opp_img(:,:,1) = (img(:,:,1) - img(:,:,2)) / sqrt(2);
-            opp_img(:,:,2) = (img(:,:,1) + img(:,:,2) - 2*img(:,:,3)) / sqrt(6);
-            opp_img(:,:,3) = sum(img, 3) / sqrt(3);
-
-            for i = 1:3
-                [~,d] = vl_dsift(opp_img(:,:,i));
-                features(N*(i-1)+1:N*i, :) = d;
-            end 
-        case 'rgb_sift'
-            features = zeros(N * 3, n_features, 'single');
-            for i = 1:3
-                [~,d] = vl_dsift(single(img(:,:,i)));
-                features(N*(i-1)+1:N*i, :) = d;
-            end 
-        otherwise % Gray sift
-            gimg = single(rgb2gray(img));
-            [~, features] = vl_dsift(gimg);
+    if opts{1} == "opponent"
+        opp_img = zeros(size(img), 'single');
+        opp_img(:,:,1) = (img(:,:,1) - img(:,:,2)) / sqrt(2);
+        opp_img(:,:,2) = (img(:,:,1) + img(:,:,2) - 2*img(:,:,3)) / sqrt(6);
+        opp_img(:,:,3) = sum(img, 3) / sqrt(3);
+        img = opp_img;
+    elseif opts{1} == "gray"
+        img = rgb2gray(img / 255);
+    end
+    
+    sc = 3 - 2 * (opts{1} == "gray");
+    N = 128;
+    features = zeros(N * sc, n_features, 'single');
+    for i = 1:sc
+        if opts{2} == "sift"
+            [~,d] = vl_sift(img(:,:,i), 'frames', frames);
+        else
+            [~,d] = vl_dsift(img(:,:,i));
+        end
+        features(N*(i-1)+1:N*i, :) = d;
     end
 end

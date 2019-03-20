@@ -1,17 +1,25 @@
 function [centroids] = build_vocabulary(X, type, n_clusters)
-    % Size of one feature
-    c_feat = 128;
-    % Size of one image
-    [h,w,c] = deal(96, 96, 3);
-    % Number of features per image
-    s_feat = (h-9) * (w-9);
-    
-    features = zeros(3 * c_feat, s_feat * size(X, 1), 'single');
-    fprintf('[build_vocab]   Extracting features…, N samples: %d (DIM: %d)\n', size(features,2), size(features,1))
-    for i = 1:size(X, 1)
-        img = reshape(X(i, :), [h,w,c]);
-        features(:, (i-1)*s_feat+1:i*s_feat) = sift(img, type);
+	opts = split(type, '_');
+    sc = (3 - 2 * (opts{1} == "gray")) * 128;
+    if opts{2} == "sift"
+        n_features = size(X, 1) * 30;
+    else
+        n_features = size(X, 1) * (size(img,1)-9) * (size(img,2)-9);
     end
+    
+    features = zeros(sc, n_features, 'single');
+    fprintf('[build_vocab]   Extracting features…, N samples: %d (DIM: %d)\n', size(features,2), size(features,1))
+    i = 1;
+    for xi = 1:size(X, 1)
+        xfeatures = sift(reshape(X(xi, :), [96, 96, 3]), type);
+        features(:, i:i+size(xfeatures, 2)-1) = xfeatures;
+        i = i+size(xfeatures, 2);
+        if opts{2} == "sift" && i > 0.9 * size(features, 2)
+            features = [features, zeros(sc, n_features)];
+        end
+    end
+    features = features(:, 1:i-1);
+    fprintf('[build_vocab]   Actual number of features: %d\n', size(features,2))
     
     disp('[build_vocab]   Kmeans clustering...')
     [centroids, ~] = vl_kmeans(features, n_clusters, 'Initialization', 'plusplus', 'Algorithm', 'ANN', 'MaxNumComparisons', ceil(n_clusters/50));
