@@ -1,4 +1,4 @@
-function [X_rgb1, X_gray1, X_rgb2, X_gray2, y_train1, y_train2] = load_N(file_name, N)
+function [X_rgb1, X_gray1, X_rgb2, X_gray2, y_train1, y_train2] = load_N(file_name, N, N_train)
 
 %file_name = 'train.mat'
 file = load(file_name);
@@ -26,7 +26,7 @@ for i=1:n
             check(file.y(i)) = check(file.y(i))+1;
             j = j+1;
 
-        else
+        elseif check(file.y(i))>= N && check(file.y(i)) < N_train
             X_train2(k, :, :, :) = reshape(file.X(i, :), [1, 96, 96, 3]);
             X_gray2(k, :, :) =  rgb2gray(reshape(X_train2(k, :, :, :), [96, 96, 3]));
             y_train2(k) = file.y(i);
@@ -39,9 +39,11 @@ for i=1:n
 end
 
 X_rgb1 = single(X_train1/255);
-X_gray1 = single(X_gray1/255);
+%X_gray1 = single(X_gray1/255);
+%X_gray1 = single(X_gray1);
 
 X_rgb2 = single(X_train2/255);
-X_gray2 = single(X_gray2/255);
+%X_gray2 = single(X_gray2/255);
+%X_gray2 = single(X_gray2);
 
 end
