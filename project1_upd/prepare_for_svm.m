@@ -13,7 +13,7 @@ for j=1:N(1)
     %size(d)
     %[~, cids] = max(vl_alldist(double(d'), cluster_means), [], 2);
     
-    [~, cids] = min(vl_alldist(double(d'), cluster_means));
+    [~, cids] = min(vl_alldist(double(d'), cluster_means), [], 2);
     b = hist(cids,1:K(2));
     
     
