@@ -14,11 +14,10 @@ for j=1:N(1)
     %[~, cids] = max(vl_alldist(double(d'), cluster_means), [], 2);
     
     [~, cids] = min(vl_alldist(double(d'), cluster_means));
-    a = histcounts(cids,1:K(2)+1);
-    %b = hist(cids,1:K(2));
-    %a == b
+    b = hist(cids,1:K(2));
     
-    X_svm(j, :) = a./sum(a) ;
+    
+    X_svm(j, :) = b./sum(b) ;
     
 end
 
