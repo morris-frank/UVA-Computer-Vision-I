@@ -20,23 +20,32 @@ opts.train = struct() ;
 opts = vl_argparse(opts, varargin) ;
 if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
 
-opts.train.gpus = [0];
+opts.train.gpus = [];
 
 
 
 %% update model
-
 net = update_model();
 
 %% TODO: Implement getIMDB function below
 
+%{
 if exist(opts.imdbPath, 'file')
+  disp("running if");
   imdb = load(opts.imdbPath) ;
 else
+  disp("running else");
   imdb = getIMDB() ;
   mkdir(opts.expDir) ;
   save(opts.imdbPath, '-struct', 'imdb') ;
 end
+%}
+
+disp("running getIMDB");
+imdb = getIMDB() ;
+disp("expdir: ");
+disp(opts.expDir);
+save(opts.imdbPath, '-struct', 'imdb') ;
 
 %%
 net.meta.classes.name = imdb.meta.classes(:)' ;
@@ -91,6 +100,8 @@ splits = {'train', 'test'};
 %load('train.mat')
 %load('unlabeled.mat')
 
+disp("##########################################");
+
 filename = 'train.mat'
 file = load(filename);
 [n, ~] = size(file.X);
@@ -98,7 +109,8 @@ file = load(filename);
 j = 1;
 for i=1:n
     if ismember(file.class_names(file.y(i)), classes)
-        imdb.images.data(:,:,:,j) = reshape(file.X(i,:), [96,96,3]);
+        img = reshape(file.X(i,:), [96,96,3]);
+        imdb.images.data(:,:,:,j) = imresize(img,[32,32]);
         %map to 5 classes
         if file.y(i) == 1
             fiveclass = 1
@@ -111,8 +123,8 @@ for i=1:n
         elseif file.y(i) == 3
             fiveclass = 5
         end                                   
-        imdb.images.labels(j,1) = single(fiveclass);
-        imdb.images.set(j, 1) = 1
+        imdb.images.labels(1, j) = single(fiveclass);
+        imdb.images.set(1, j) = 1
         j = j+1;
     end
 end
@@ -123,7 +135,8 @@ file = load(filename);
 %Create imagestack+label reference
 for i=1:n
     if ismember(file.class_names(file.y(i)), classes)
-        imdb.images.data(:,:,:,j) = reshape(file.X(i,:), [96,96,3]);
+        img = reshape(file.X(i,:), [96,96,3]);
+        imdb.images.data(:,:,:,j) = imresize(img,[32,32]);
         %map to 5 classes
         if file.y(i) == 1
             fiveclass = 1
@@ -136,21 +149,21 @@ for i=1:n
         elseif file.y(i) == 3
             fiveclass = 5
         end                                   
-        imdb.images.labels(j,1) = single(fiveclass);
-        imdb.images.set(j, 1) = 2
+        imdb.images.labels(1, j) = single(fiveclass);
+        imdb.images.set(1, j) = 2
         j = j+1;
     end
 end
 
 %Show a random picture
-temp_3d = reshape(imdb.images.data(:,:,:,205), [96,96,3]);
-imshow(temp_3d)
+%temp_3d = reshape(imdb.images.data(:,:,:,205), [32,32,3]);
+%imshow(temp_3d)
 
 % subtract mean
-dataMean = mean(data(:, :, :, sets == 1), 4);
-data = bsxfun(@minus, data, dataMean);
+dataMean = mean(imdb.images.data(:, :, :, imdb.images.set == 1), 4);
+data = bsxfun(@minus, double(imdb.images.data), double(dataMean));
 
-%imdb.images.data = data ;
+imdb.images.data = single(data) ;
 %imdb.images.labels = single(labels) ;
 %imdb.images.set = sets;
 imdb.meta.sets = {'train', 'val'} ;
