@@ -29,7 +29,7 @@ net = update_model();
 
 %% TODO: Implement getIMDB function below
 
-%{
+
 if exist(opts.imdbPath, 'file')
   disp("running if");
   imdb = load(opts.imdbPath) ;
@@ -39,13 +39,14 @@ else
   mkdir(opts.expDir) ;
   save(opts.imdbPath, '-struct', 'imdb') ;
 end
-%}
 
+%{
 disp("running getIMDB");
 imdb = getIMDB() ;
 disp("expdir: ");
 disp(opts.expDir);
 save(opts.imdbPath, '-struct', 'imdb') ;
+%}
 
 %%
 net.meta.classes.name = imdb.meta.classes(:)' ;
