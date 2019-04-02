@@ -95,17 +95,10 @@ end
 
 %% Assign previous weights to the network
 function newnet = update_weights(oldnet, newnet)
-
-% loop until loss layer
-for i = 1:numel(oldnet.layers)-2
-    
-    if(isfield(oldnet.layers{i}, 'weights'))
-       
-        newnet.layers{i}.weights = oldnet.layers{i}.weights;
-        
+    % loop until loss layer
+    for i = 1:numel(oldnet.layers)-2
+        if(isfield(oldnet.layers{i}, 'weights'))
+            newnet.layers{i}.weights = oldnet.layers{i}.weights;
+        end
     end
-    
 end
-
-end
-
