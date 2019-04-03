@@ -4,7 +4,7 @@ function [centroids] = build_vocabulary(X, type, n_clusters)
     if opts{2} == "sift"
         n_features = size(X, 1) * 30;
     else
-        n_features = size(X, 1) * (size(img,1)-9) * (size(img,2)-9);
+        n_features = size(X, 1) * (96-9) * (96-9);
     end
     
     features = zeros(sc, n_features, 'single');
