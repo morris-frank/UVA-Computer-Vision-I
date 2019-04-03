@@ -1,5 +1,5 @@
-vocab_size = 0.3;
-nSVM = 100;
+vocab_size = 0.5;
+nSVM = 250;
 n_clusters = [400, 1000, 2500];
 types = ["rgb_sift", "opponent_sift", "grey_sift"];
 

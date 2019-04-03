@@ -5,7 +5,7 @@ function [features] = sift(img, type)
     if opts{2} == "sift"
         [frames, ~] = vl_sift(rgb2gray(img / 255));
         n_features = size(frames, 2);
-    else
+    elseif opts{2} == "dsift"
         n_features = (size(img,1)-9) * (size(img,2)-9);
     end
     
