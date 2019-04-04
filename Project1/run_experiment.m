@@ -67,14 +67,14 @@ function [results] = run_experiment(type, n_clusters, vocab_size, nSVM)
         D_test(i, :) = feature_histogram(squeeze(X_test(i, :, :, :)), centroids, type);
     end
     
-    results = zeros(nc, 2);
+    results = zeros(nc, 3);
     for ci = 1:nc
         yc_train = zeros(nc * nSVM, 1, 'double');
         yc_train((ci-1)*nSVM+1:ci*nSVM) = 1;
         fprintf('[run_exp] Train classifier for class %d\n', C(ci))
         model = fitcsvm(D_train, yc_train', 'Standardize',true,'KernelScale','auto');
         [labels] = predict(model, D_test);
-        [prec, rec] = prec_rec(y_test == C(ci), labels);
-        results(ci, :) = [prec, rec];
+        [prec, rec, acc] = prec_rec(y_test == C(ci), labels);
+        results(ci, :) = [prec, rec, acc];
     end
 end

@@ -7,8 +7,8 @@ results = [];
 for n = n_clusters
     for type = types
         fprintf('%s - %s\n', int2str(n), type)
-        pr = run_experiment(type, n, vocab_size, nSVM);
-        results = [results; {n,type,pr}];
+        pra = run_experiment(type, n, vocab_size, nSVM);
+        results = [results; {n,type,pra}];
     end
 end
 
