@@ -1,8 +1,8 @@
 function [net, info, expdir] = finetune_cnn(varargin)
 
 %% Define options
-run(fullfile(fileparts(mfilename('fullpath')), ...
-  'MatConvNet', 'matlab', 'vl_setupnn.m')) ;
+%run(fullfile(fileparts(mfilename('fullpath')), ...
+%  'MatConvNet', 'matlab', 'vl_setupnn.m')) ;
 
 opts.modelType = 'lenet' ;
 [opts, varargin] = vl_argparse(opts, varargin) ;
@@ -114,23 +114,23 @@ for i=1:n
         imdb.images.data(:,:,:,j) = imresize(img,[32,32]);
         %map to 5 classes
         if file.y(i) == 1
-            fiveclass = 1
+            fiveclass = 1;
         elseif file.y(i) == 2
-            fiveclass = 2
+            fiveclass = 2;
         elseif file.y(i) == 9
-            fiveclass = 3
+            fiveclass = 3;
         elseif file.y(i) == 7
-            fiveclass = 4
+            fiveclass = 4;
         elseif file.y(i) == 3
-            fiveclass = 5
+            fiveclass = 5;
         end                                   
         imdb.images.labels(1, j) = single(fiveclass);
-        imdb.images.set(1, j) = 1
+        imdb.images.set(1, j) = 1;
         j = j+1;
     end
 end
 
-filename = 'test.mat'
+filename = 'test.mat';
 file = load(filename);
 [n, ~] = size(file.X);
 %Create imagestack+label reference
