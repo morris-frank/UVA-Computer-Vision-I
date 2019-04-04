@@ -11,3 +11,8 @@ for n = n_clusters
         results = [results; {n,type,pr}];
     end
 end
+
+for i = 1:size(results, 1)
+     mpmr = mean(results{i,3});
+    fprintf('%d\t%s\t%f\n',results{i,1},results{i,2},mpmr(1))
+end
