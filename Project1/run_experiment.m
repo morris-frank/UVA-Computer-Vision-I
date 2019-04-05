@@ -73,8 +73,21 @@ function [results] = run_experiment(type, n_clusters, vocab_size, nSVM)
         yc_train((ci-1)*nSVM+1:ci*nSVM) = 1;
         fprintf('[run_exp] Train classifier for class %d\n', C(ci))
         model = fitcsvm(D_train, yc_train', 'Standardize',true,'KernelScale','auto');
-        [labels] = predict(model, D_test);
+        [labels, scores] = predict(model, D_test);
         [prec, rec, acc] = prec_rec(y_test == C(ci), labels);
         results(ci, :) = [prec, rec, acc];
+        
+        % Get Top and bottom 5 and save em boyz!!!!
+        [~, top5] = maxk(scores(:, 1), 5);
+        for ii = 1:5
+            img = squeeze(X_test(top5(ii),:,:,:)) / 255;
+            imwrite(img, sprintf('%s_%d_class_%d_top_%d.png',type,n_clusters,ci,ii));
+        end
+        
+        [~, bottom5] = mink(scores(:, 1), 5);
+        for ii = 1:5
+            img = squeeze(X_test(bottom5(ii),:,:,:)) / 255;
+            imwrite(img, sprintf('%s_%d_class_%d_bottom_%d.png',type,n_clusters,ci,ii));
+        end
     end
 end
